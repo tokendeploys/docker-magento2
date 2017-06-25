@@ -66,8 +66,8 @@ RUN set -xe \
 
     # Install n98
     && curl -o n98-magerun2 http://files.magerun.net/n98-magerun2.phar \
+    && chmod +x n98-magerun2 \
     && mv n98-magerun2 /usr/local/bin/ \
-    && chmod +x /usr/local/bin/n98-magerun2 \
     && n98-magerun2 selfupdate
 
 # Allow code to be copied into the image instead of mounted

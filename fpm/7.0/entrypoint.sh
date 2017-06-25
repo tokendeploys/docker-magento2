@@ -17,7 +17,7 @@ sed -i 's/www-data/magento/g' /usr/local/etc/php-fpm.d/www.conf
     echo "xdebug.remote_enable = ${XDEBUG_ENABLE}"
     echo "xdebug.remote_port = ${XDEBUG_PORT}"
     echo "xdebug.remote_connect_back = 1"
-} > /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+} >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 {
     echo "memory_limit = ${PHP_INI_MEMORY_LIMIT}"

@@ -2,7 +2,8 @@
 
 set -e
 
-envsubst '\$FCGI_HOST \$FCGI_PORT' < /etc/nginx/conf.d/default.conf.template \
+wget -P /etc/nginx/conf.d/ https://raw.githubusercontent.com/magento/magento2/${MAGE_VERSION}/nginx.conf.sample
+envsubst '\$FCGI_HOST \$FCGI_PORT \$__MAGE_ROOT' < /etc/nginx/conf.d/default.conf.template \
     > /etc/nginx/conf.d/default.conf
 
 exec "$@"

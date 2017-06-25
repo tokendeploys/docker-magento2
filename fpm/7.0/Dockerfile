@@ -31,7 +31,6 @@ RUN set -xe \
 
     # Extra PHP extensions (no extra configuration)
     && docker-php-ext-install \
-        bcmath \
         gd \
         intl \
         mbstring \

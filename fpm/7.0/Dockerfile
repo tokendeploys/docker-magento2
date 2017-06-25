@@ -49,32 +49,21 @@ RUN set -xe \
         --with-jpeg-dir=/usr/include \
     && docker-php-ext-install gd \
 
-    # Install xdebug + configuration
+    # Install xdebug
     && pecl install xdebug \
     && docker-php-ext-enable xdebug \
-    && { \
-        echo "xdebug.remote_enable = $XDEBUG_ENABLE"; \
-        echo "xdebug.remote_port = $XDEBUG_PORT"; \
-        echo "xdebug.remote_connect_back = 1"; \
-    } | tee /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-
-    && { \
-        echo "memory_limit = $PHP_INI_MEMORY_LIMIT"; \
-        echo "date.timezone = $PHP_INI_TIMEZONE"; \
-    } | tee /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
 
     # Delete build dependencies to save space
     && apk del .php-build-deps \
 
     # Remove apk cache
-    && rm -rf /var/cache/apk/* \
-
-    # Create an owner user/group based on OWNER_* environment variables
-    # Update fpm config to run the pool workers as this user
-    && id -g magento &> /dev/null || addgroup -g $OWNER_GID magento \
-    && id -u magento &> /dev/null || adduser -u $OWNER_UID -G magento -D -s /bin/sh magento \
-    && sed -i 's/www-data/magento/g' /usr/local/etc/php-fpm.d/www.conf
+    && rm -rf /var/cache/apk/*
 
 # Allow code to be copied into the image instead of mounted
 ONBUILD RUN mkdir -p /var/www/magento
 ONBUILD COPY ./ /var/www/magento/
+
+COPY entrypoint.sh /usr/local/bin
+
+ENTRYPOINT ["entrypoint.sh"]
+CMD ["php-fpm"]

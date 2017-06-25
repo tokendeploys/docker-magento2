@@ -63,10 +63,7 @@ Compose will run the containers for you in the right order and create a network 
 We need to still run some additional installation via composer:
 
 ```bash
-$ docker exec -it magedev_fpm_1 /bin/sh
-/var/www/html # su - magento
-6c445fe9c881:~$ cd /var/www/magento/
-6c445fe9c881:/var/www/magento$ composer install
+$ docker exec -u magento magedev_fpm_1 composer --working-dir="/var/www/magento" install
 Loading composer repositories with package information
 Installing dependencies (including require-dev) from lock file
 Package operations: 82 installs, 0 updates, 0 removals
@@ -86,4 +83,8 @@ We are now ready to hit the setup page, but we need to first figure out the IP a
 $ docker inspect mage_dev_nginx_1 | grep IPA
 ```
 
-With this ip address, hit the frontend http://<nginx container ip>/setup to go through the setup steps.
+With this ip address, hit the frontend http://<nginx container ip>/setup to go through the setup steps. During those steps, you will be asked for database details. The host for the db corresponds to the IP address of the mysql container. You can retrieve it by running:
+
+```bash
+$ docker inspect mage_dev_mysql_1 | grep IPA
+```

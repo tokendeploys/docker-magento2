@@ -74,6 +74,7 @@ ONBUILD RUN mkdir -p /var/www/magento
 ONBUILD COPY ./ /var/www/magento/
 
 COPY entrypoint.sh /usr/local/bin
+COPY phpstorm_xdebug.sh /usr/local/bin
 
 ENTRYPOINT ["entrypoint.sh"]
 CMD ["php-fpm"]

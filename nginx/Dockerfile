@@ -3,6 +3,7 @@ FROM nginx:alpine
 MAINTAINER Steve Desmet <steve.desmet@tokendeploys.com>
 
 ENV __MAGE_ROOT=/var/www/magento \
+    __MAGE_MODE=developer \
     FCGI_HOST=127.0.0.1 \
     FCGI_PORT=9000
 

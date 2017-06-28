@@ -5,6 +5,7 @@ upstream fastcgi_backend {
 server {
    listen 80;
    set $MAGE_ROOT $__MAGE_ROOT;
+   set $MAGE_MODE $__MAGE_MODE;
    include $__MAGE_ROOT/nginx.conf.sample;
 }
 

@@ -3,10 +3,12 @@ MAINTAINER Steve Desmet <steve.desmet@tokendeploys.com>
 
 ENV OWNER_UID=1000 \
     OWNER_GID=1000 \
+    OWNER_NAME=magento \
     PHP_INI_MEMORY_LIMIT=512M \
     PHP_INI_TIMEZONE=UTC \
     XDEBUG_PORT=9000 \
-    XDEBUG_ENABLE=0
+    XDEBUG_ENABLE=0 \
+    MAGE_ROOT=/var/www/magento
 
 RUN set -xe \
 
@@ -70,10 +72,12 @@ RUN set -xe \
     && n98-magerun2 selfupdate
 
 # Allow code to be copied into the image instead of mounted
-ONBUILD RUN mkdir -p /var/www/magento
-ONBUILD COPY ./ /var/www/magento/
+ONBUILD RUN mkdir -p $MAGE_ROOT
+ONBUILD COPY . $MAGE_ROOT
+ONBUILD RUN rm -rf $MAGE_ROOT/pub/static
 
 COPY entrypoint.sh /usr/local/bin
+COPY phpstorm_xdebug.sh /usr/local/bin
 
 ENTRYPOINT ["entrypoint.sh"]
 CMD ["php-fpm"]

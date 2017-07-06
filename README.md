@@ -58,7 +58,7 @@ Starting magedev_nginx_1
 Compose will run the containers for you in the right order and create a network as well, which each of the containers receiving a IP address on this subnet. A couple of things to notice:
 * We are not using a root password for MySQL which is fine, this is for local development only
 * We are enabling XDEBUG on the fpm container through the `XDEBUG_ENABLE` environment variable
-* We are assigning `fpm` to the `FCGI_HOST` variable which is exposed in the 
+* We are assigning `fpm` to the `FCGI_HOST` variable which is available since docker-compose will launch all the containers on a `bridge` type network where the names can be used for DNS lookup.
 
 We need to still run some additional installation via composer:
 
@@ -83,8 +83,13 @@ We are now ready to hit the setup page, but we need to first figure out the IP a
 $ docker inspect mage_dev_nginx_1 | grep IPA
 ```
 
-With this ip address, hit the frontend http://<nginx container ip>/setup to go through the setup steps. During those steps, you will be asked for database details. The host for the db corresponds to the IP address of the mysql container. You can retrieve it by running:
+With this ip address, hit the frontend http://<nginx container ip>/setup to go through the setup steps. During those steps, you will be asked for database details. Again, just as with the `FCGI_HOST` param in the nginx configuration, you can use the name of the MySQL container, which in the example above is `mysql`.
 
-```bash
-$ docker inspect mage_dev_mysql_1 | grep IPA
-```
+## Mailhog
+TODO
+
+## Ngrok
+TODO
+
+## Swagger UI
+TODO

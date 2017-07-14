@@ -26,7 +26,7 @@ RUN set -xe \
 
     # Extra PHP extensions (no extra configuration)
     && docker-php-ext-install \
-        mcrypt \
+        bcmath \
         gd \
         intl \
         mbstring \

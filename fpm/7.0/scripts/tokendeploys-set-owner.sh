@@ -12,5 +12,3 @@ sed -ri "s/^group.*/group = $3/g" /usr/local/etc/php-fpm.d/www.conf
 # Correct left over root owned files
 find $MAGE_ROOT -user root -exec chown $3:$3 {} \;
 
-kill -S USR2 1
-

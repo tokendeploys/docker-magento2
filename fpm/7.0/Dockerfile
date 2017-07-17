@@ -65,4 +65,4 @@ RUN set -xe \
     && mv n98-magerun2 /usr/local/bin/ \
     && n98-magerun2 selfupdate
 
-COPY tokendeploys-set-owner.sh /usr/local/bin
+COPY scripts/* /usr/local/bin

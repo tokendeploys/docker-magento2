@@ -48,21 +48,22 @@ RUN set -xe \
     && pecl install xdebug \
     && docker-php-ext-enable xdebug \
 
-    # Delete build dependencies to save space
-    && apk del .php-build-deps \
-
-    # Remove apk cache
-    && rm -rf /var/cache/apk/* \
-
-    # Install composer
+    # Install composer and dependencies
     && curl -sS https://getcomposer.org/installer | \
         php -- --install-dir=/usr/local/bin --filename=composer \
     && composer selfupdate \
+    && apk add --no-cache openssh git \
 
     # Install n98
     && curl -o n98-magerun2 http://files.magerun.net/n98-magerun2.phar \
     && chmod +x n98-magerun2 \
     && mv n98-magerun2 /usr/local/bin/ \
-    && n98-magerun2 selfupdate
+    && n98-magerun2 selfupdate \
+
+    # Delete build dependencies to save space
+    && apk del .php-build-deps \
+
+    # Remove apk cache
+    && rm -rf /var/cache/apk/* \
 
 COPY scripts/* /usr/local/bin/

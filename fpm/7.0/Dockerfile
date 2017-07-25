@@ -64,6 +64,6 @@ RUN set -xe \
     && apk del .php-build-deps \
 
     # Remove apk cache
-    && rm -rf /var/cache/apk/* \
+    && rm -rf /var/cache/apk/*
 
 COPY scripts/* /usr/local/bin/

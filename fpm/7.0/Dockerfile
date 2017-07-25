@@ -52,7 +52,7 @@ RUN set -xe \
     && curl -sS https://getcomposer.org/installer | \
         php -- --install-dir=/usr/local/bin --filename=composer \
     && composer selfupdate \
-    && apk add --no-cache openssh git \
+    && apk add --no-cache openssh-client git \
 
     # Install n98
     && curl -o n98-magerun2 http://files.magerun.net/n98-magerun2.phar \

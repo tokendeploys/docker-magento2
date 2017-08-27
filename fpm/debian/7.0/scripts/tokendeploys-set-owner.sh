@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+set -e
 
 # Create an owner user/group based on OWNER_* environment variables
 id -g $3 &> /dev/null || groupadd -g $2 $3

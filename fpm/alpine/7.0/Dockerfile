@@ -1,14 +1,7 @@
-FROM php:7.1-fpm-alpine
+FROM php:7.0-fpm-alpine
 MAINTAINER Steve Desmet <steve.desmet@tokendeploys.com>
 
-ENV OWNER_UID=1000 \
-    OWNER_GID=1000 \
-    OWNER_NAME=magento \
-    PHP_INI_MEMORY_LIMIT=512M \
-    PHP_INI_TIMEZONE=UTC \
-    XDEBUG_PORT=9000 \
-    XDEBUG_ENABLE=0 \
-    MAGE_ROOT=/var/www/magento
+ENV MAGE_ROOT=/var/www/magento
 
 RUN set -xe \
 
@@ -20,6 +13,7 @@ RUN set -xe \
         freetype-dev \
         libxslt-dev \
         libmcrypt-dev \
+        libmemcached-dev \
         $PHPIZE_DEPS \
 
     # Install libraries needed for extra PHP modules
@@ -33,6 +27,7 @@ RUN set -xe \
 
     # Extra PHP extensions (no extra configuration)
     && docker-php-ext-install \
+        bcmath \
         gd \
         intl \
         mbstring \
@@ -54,30 +49,26 @@ RUN set -xe \
     && pecl install xdebug \
     && docker-php-ext-enable xdebug \
 
-    # Delete build dependencies to save space
-    && apk del .php-build-deps \
+    # Install redis pecl package
+    && pecl install redis \
+    && docker-php-ext-enable redis \
 
-    # Remove apk cache
-    && rm -rf /var/cache/apk/* \
-
-    # Install composer
+    # Install composer and dependencies
     && curl -sS https://getcomposer.org/installer | \
         php -- --install-dir=/usr/local/bin --filename=composer \
     && composer selfupdate \
+    && apk add --no-cache openssh-client git \
 
     # Install n98
     && curl -o n98-magerun2 http://files.magerun.net/n98-magerun2.phar \
     && chmod +x n98-magerun2 \
     && mv n98-magerun2 /usr/local/bin/ \
-    && n98-magerun2 selfupdate
+    && n98-magerun2 selfupdate \
 
-# Allow code to be copied into the image instead of mounted
-ONBUILD RUN mkdir -p $MAGE_ROOT
-ONBUILD COPY . $MAGE_ROOT
-ONBUILD RUN rm -rf $MAGE_ROOT/pub/static
+    # Delete build dependencies to save space
+    && apk del .php-build-deps \
 
-COPY entrypoint.sh /usr/local/bin
-COPY phpstorm_xdebug.sh /usr/local/bin
+    # Remove apk cache
+    && rm -rf /var/cache/apk/*
 
-ENTRYPOINT ["entrypoint.sh"]
-CMD ["php-fpm"]
+COPY scripts/* /usr/local/bin/

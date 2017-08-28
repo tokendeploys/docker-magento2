@@ -41,7 +41,8 @@ RUN set -xe \
     && mv n98-magerun2 /usr/local/bin/ \
     && n98-magerun2 selfupdate \
     \
-    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false $buildDeps $PHPIZE_DEPS
+    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false $PHPIZE_DEPS \
+    && apt-get purge -y $mageBuildDeps
 
 WORKDIR $MAGE_ROOT
 

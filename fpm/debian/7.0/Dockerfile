@@ -13,7 +13,7 @@ RUN set -xe \
         libxslt1-dev \
         libmcrypt-dev \
     " \
-    && apt-get update && apt-get install -y $mageBuildDeps openssh-client git --no-install-recommends && rm -rf /var/lib/apt/lists/* \
+    && apt-get update && apt-get install -y $mageBuildDeps openssh-client git ssmtp --no-install-recommends && rm -rf /var/lib/apt/lists/* \
     \
     && docker-php-ext-install \
         bcmath \
@@ -40,6 +40,9 @@ RUN set -xe \
     && chmod +x n98-magerun2 \
     && mv n98-magerun2 /usr/local/bin/ \
     && n98-magerun2 selfupdate \
+    \
+    && echo "FromLineOverride=YES" >> /etc/ssmtp/ssmtp.conf \
+    && echo 'sendmail_path = "/usr/sbin/sendmail -i -t"' > /usr/local/etc/php/conf.d/mail.ini \
     \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false $PHPIZE_DEPS \
     && apt-get purge -y $mageBuildDeps
